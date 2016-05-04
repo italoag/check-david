@@ -7,20 +7,21 @@ const semver = require('semver');
 const david = require('david');
 const checkstyleFormatter = require('checkstyle-formatter');
 
-const pkg = require('./package.json');
-const pkgLines = fs.readFileSync('./package.json').toString().split(/\n/);
+const packageFile = process.argv[2];
 
 const errorOpts = {
     E404: true,
     ESCM: true
 };
 
+let pkg, pkgLines;
+
 /**
  * @param {string} name
  * @param {string} version
  * @return {?{ source: string, line: number, column: number }}
  */
-function getSourceLine(name, version) {
+function findLineInSource(name, version) {
     const matches = pkgLines
         .map((source, index) => ({ source, line: index + 1 }))
         .filter(entry => entry.source.indexOf(`"${name}": "${version}"`) !== -1)
@@ -39,7 +40,7 @@ function check(dependencies) {
     Object.keys(dependencies).forEach(function (name) {
         const vStable = dependencies[name].stable;
         const vRequired = dependencies[name].required;
-        const source = getSourceLine(name, vRequired) || { line: 0, column: 0 };
+        const source = findLineInSource(name, vRequired) || { line: 0, column: 0 };
 
         if (!semver.valid(vRequired)) {
             // David has incomplete support for alternative syntaxes, e.g. "git@github.com:...", see
@@ -76,10 +77,15 @@ function check(dependencies) {
 }
 
 Promise
-    .join(
+    .fromCallback(cb => fs.access(packageFile, fs.R_OK, cb))
+    .then(function () {
+        pkg = require(packageFile);
+        pkgLines = fs.readFileSync(packageFile).toString().split(/\n/);
+    })
+    .then(() => [
         Promise.fromCallback(cb => david.getUpdatedDependencies(pkg, { stable: true, error: errorOpts }, cb)),
         Promise.fromCallback(cb => david.getUpdatedDependencies(pkg, { dev: true, stable: true, error: errorOpts }, cb))
-    )
+    ])
     .map(check)
     .spread((deps, devDeps) => deps.concat(devDeps))
     .tap(messages => console.log(checkstyleFormatter([{ filename: 'package.json', messages }])))
