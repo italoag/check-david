@@ -1,0 +1,31 @@
+{
+  "name": "check-david",
+  "version": "0.0.1",
+  "description": "Check your project's dependencies for newer versions.",
+  "main": "index.js",
+  "bin": {
+    "check-david": "./index.js"
+  },
+  "homepage": "https://github.com/Finanzchef24-GmbH/check-david",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Finanzchef24-GmbH/check-david.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Finanzchef24-GmbH/check-david/issues"
+  },
+  "keywords": [
+    "david", "dependencies", "check"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Raphael Pigulla <raphael.pigulla@finanzchef24.de>",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "3.3.5",
+    "checkstyle-formatter": "1.0.0",
+    "david": "7.0.1",
+    "semver": "5.1.0"
+  }
+}
