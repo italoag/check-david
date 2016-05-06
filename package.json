@@ -1,10 +1,13 @@
 {
   "name": "check-david",
-  "version": "0.0.2",
-  "description": "Check your project's dependencies for newer versions.",
+  "version": "0.0.3",
+  "description": "No-nonsense dependency checks for your package.json",
   "main": "index.js",
   "bin": {
     "check-david": "./index.js"
+  },
+  "engines": {
+    "node": "4"
   },
   "homepage": "https://github.com/Finanzchef24-GmbH/check-david",
   "repository": {
