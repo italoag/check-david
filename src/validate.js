@@ -14,13 +14,11 @@ function validateRange(name, stable, requiredRange, mustBePinned) {
     if (mustBePinned) {
         return {
             severity: 'error',
-            part: null,
             message: `Version for module "${name}" is not pinned`
         };
     } else if (!semver.satisfies(stable, requiredRange)) {
         return {
             severity: 'error',
-            part: null,
             message: `Latest version for module "${name}" is out of range "${requiredRange}"`
         };
     } else {
