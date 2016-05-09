@@ -12,11 +12,11 @@ A simple command line tool that checks whether your dependencies are up to date 
 
 ### Use Case
 
-This module attempts to solve a very specific problem and thus has the following semantics:
+This module has the following semantics:
 
- - if you're at least one patch versions behind, an informational message will be generated
- - if you're at least one minor versions behind, a warning will be generated
- - if you're at least one major versions behind, an error will be generated
+ - if you're at least one patch version behind, an informational message will be generated
+ - if you're at least one minor version behind, a warning will be generated
+ - if you're at least one major version behind, an error will be generated
 
 If you set the `--force-pinned` (and/or `--force-dev-pinned`) flag, unpinned dependencies will cause an error. If needed, you can completely [ignoring packages](https://github.com/alanshaw/david#ignore-dependencies). If you have a specific feature request, feel free to [create an issue](https://github.com/Finanzchef24-GmbH/check-david/issues/new).
 
