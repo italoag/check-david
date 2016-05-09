@@ -1,6 +1,6 @@
 {
   "name": "check-david",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "No-nonsense dependency checks for your package.json",
   "main": "index.js",
   "bin": {

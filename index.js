@@ -12,26 +12,46 @@ const argv = yargs.parse(process.argv);
 const packageFile = argv.file;
 
 /**
- * @param {string} type
+ * @param {string} part
  * @return {number}
  */
-function level(type) {
-    switch (type) {
-    case 'error':
+function part(part) {
+    switch (part) {
+    case null:
+    case 'major':
         return 2;
-    case 'warning':
+    case 'minor':
         return 1;
-    case 'info':
+    case 'patch':
         return 0;
     default:
-        throw new Error(`Unexpected level: "${level}"`);
+        throw new Error(`Unexpected part: "${part}"`);
+    }
+}
+
+/**
+ * @param {string} part
+ * @return {number}
+ */
+function severity(part) {
+    switch (part) {
+    case null:
+    case 'major':
+        return 'error';
+    case 'minor':
+        return 'warning';
+    case 'patch':
+        return 'info';
+    default:
+        throw new Error(`Unexpected part: "${part}"`);
     }
 }
 
 /* eslint-disable no-console */
 new CheckDavid(packageFile)
     .run({ pin: argv.forcePinned, pinDev: argv.forceDevPinned })
-    .then(messages => messages.filter(message => level(message.severity) >= level(argv.level)))
+    .filter(message => part(message.part) >= part(argv.level))
+    .map(message => Object.assign(message, { severity: severity(message.part) }))
     .tap(messages => console.log(checkstyleFormatter([{ filename: path.basename(packageFile), messages }])))
     .catch(function (error) {
         console.error(error.message);

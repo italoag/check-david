@@ -13,12 +13,12 @@ const semver = require('semver');
 function validateRange(name, stable, requiredRange, mustBePinned) {
     if (mustBePinned) {
         return {
-            severity: 'error',
+            part: null,
             message: `Version for module "${name}" is not pinned`
         };
     } else if (!semver.satisfies(stable, requiredRange)) {
         return {
-            severity: 'error',
+            part: null,
             message: `Latest version for module "${name}" is out of range "${requiredRange}"`
         };
     } else {
@@ -50,22 +50,22 @@ module.exports = function validate(name, stableStr, requiredStr, mustBePinned) {
         // David has incomplete support for alternative syntaxes, e.g. "git@github.com:...", see
         // https://github.com/alanshaw/david/issues/92
         return {
-            severity: 'error',
+            part: null,
             message: `Unparsable semver string for module "${name}": "${requiredStr}"`
         };
     }
 
-    function getMessage(part, severity) {
+    function getMessage(part) {
         const stable = semver[part](stableStr);
         const required = semver[part](requiredStr);
 
         if (stable > required) {
             return {
-                severity,
+                part,
                 message: `New ${part} version available for module "${name}" (${stableStr})`
             };
         }
     }
 
-    return getMessage('major', 'error') || getMessage('minor', 'warning') || getMessage('patch', 'info') || null;
+    return getMessage('major') || getMessage('minor') || getMessage('patch') || null;
 };
