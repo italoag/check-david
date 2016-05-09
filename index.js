@@ -31,7 +31,7 @@ function part(part) {
 
 /**
  * @param {string} part
- * @return {number}
+ * @return {string}
  */
 function severity(part) {
     switch (part) {
