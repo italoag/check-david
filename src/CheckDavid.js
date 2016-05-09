@@ -3,9 +3,10 @@
 const fs = require('fs');
 
 const david = require('david');
-const escape = require('escape-string-regexp');
 const Promise = require('bluebird');
-const semver = require('semver');
+
+const validate = require('./validate');
+const findLine = require('./find-line');
 
 class CheckDavid {
     /**
@@ -18,24 +19,8 @@ class CheckDavid {
     }
 
     /**
-     * Returns the line in which the given dependency was specified. If no match was found (or it was ambiguous), null
-     * is returned.
+     * Load the package.json file specified in the constructor and split it into lines.
      *
-     * @private
-     * @param {string} name
-     * @param {string} version
-     * @return {?{ source: string, line: number, column: number }}
-     */
-    _findLineInSource(name, version) {
-        const matches = this._lines
-            .map((source, index) => ({ source, line: index + 1 }))
-            .filter(entry => new RegExp(`"${escape(name)}":\\s*"${escape(version)}"`).test(entry.source))
-            .map(entry => Object.assign(entry, { column: entry.source.indexOf(version)}));
-
-        return matches.length === 1 ? matches[0] : null;
-    }
-
-    /**
      * @private
      * @return {Promise}
      */
@@ -43,7 +28,11 @@ class CheckDavid {
         return Promise
             .fromCallback(cb => fs.readFile(this._file, cb))
             .bind(this)
-            .then(buffer => this._lines = buffer.toString().split(/\n/));
+            .then(buffer => buffer.toString())
+            .then(function (contents) {
+                this._pkg = JSON.parse(contents);
+                this._lines = contents.split(/\n/);
+            });
     }
 
     /**
@@ -53,7 +42,7 @@ class CheckDavid {
     _getUpdatedDependencies() {
         return Promise
             .join(
-                Promise.fromCallback(cb => david.getUpdatedDependencies(this._pkg, { stable: true }, cb)),
+                Promise.fromCallback(cb => david.getUpdatedDependencies(this._pkg, { dev: false, stable: true }, cb)),
                 Promise.fromCallback(cb => david.getUpdatedDependencies(this._pkg, { dev: true, stable: true }, cb))
             );
     }
@@ -66,75 +55,38 @@ class CheckDavid {
      * @param {string} name The name of the dependency.
      * @param {string} stableStr The latest stable version available.
      * @param {string} requiredStr The required version as specified in the package.json.
-     * @return {?Object} An error/warning message object or null.
+     * @param {boolean} mustBePinned If true, the dependency must be pinned.
+     * @return {?Object} A message object or null.
      */
-    _checkDependency(name, stableStr, requiredStr) {
-        const source = this._findLineInSource(name, requiredStr) || { line: 0, column: 0 };
+    _checkDependency(name, stableStr, requiredStr, mustBePinned) {
+        const source = findLine(this._lines, name, requiredStr);
+        const message = validate(name, stableStr, requiredStr, mustBePinned);
 
-        if (!semver.valid(requiredStr)) {
-            if (semver.validRange(requiredStr)) {
-                return {
-                    line: source.line,
-                    column: source.column,
-                    severity: 'error',
-                    message: `Version for module "${name}" is not pinned`
-                };
-            }
-
-            // David has incomplete support for alternative syntaxes, e.g. "git@github.com:...", see
-            // https://github.com/alanshaw/david/issues/92
-            return {
-                line: source.line,
-                column: source.column,
-                severity: 'warning',
-                message: `Unparsable semver string for module "${name}": "${requiredStr}"`
-            };
-        }
-
-        const stable = { major: semver.major(stableStr), minor: semver.minor(stableStr) };
-        const required = { major: semver.major(requiredStr), minor: semver.minor(requiredStr) };
-
-        if (stable.major > required.major) {
-            return {
-                line: source.line,
-                column: source.column,
-                severity: 'error',
-                message: `New major version available for module "${name}" (${stableStr})`
-            };
-        } else if (stable.minor > required.minor) {
-            return {
-                line: source.line,
-                column: source.column,
-                severity: 'warning',
-                message: `New minor version available for module "${name}" (${stableStr})`
-            };
-        }
+        return message ? Object.assign(message, source) : null;
     }
-    
+
     /**
      * @private
-     * @param {{ stable: string, required: string, latest: string }} dependencies
+     * @param {{ stable: string, required: string, latest: string }} deps
+     * @param {boolean} mustBePinned If true, the dependency must be pinned.
      * @return {Array.<Object>}
      */
-    _check(dependencies) {
-        return Object.keys(dependencies).reduce(function (result, name) {
-            const stable = dependencies[name].stable;
-            const required = dependencies[name].required;
-            const message = this._checkDependency(name, stable, required);
+    _check(deps, mustBePinned) {
+        return Object.keys(deps).reduce(function (result, name) {
+            const message = this._checkDependency(name, deps[name].stable, deps[name].required, mustBePinned);
             return message ? result.concat(message) : result;
         }.bind(this), []);
     }
 
     /**
+     * @param {Object=} options
      * @return {Promise.<Array.<Object>>}
      */
-    run() {
-        return Promise
-            .try(() => this._pkg = require(this._file))
-            .bind(this)
-            .then(this._load)
+    run(options) {
+        const opts = Object.assign({}, { pin: false, pinDev: false }, options);
+        return this._load()
             .then(this._getUpdatedDependencies)
-            .map(this._check)
+            .spread((deps, devDeps) => [this._check(deps, opts.pin), this._check(devDeps, opts.pinDev)])
             .spread((deps, devDeps) => deps.concat(devDeps));
     }
 }

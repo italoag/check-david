@@ -1,5 +1,6 @@
 # check-david
 [![npm](https://img.shields.io/npm/v/check-david.svg?style=flat-square)](https://www.npmjs.com/package/check-david)
+![Codeship](https://img.shields.io/codeship/f6eb23c0-f80b-0133-3724-2eb9f408a9c3.svg?maxAge=2592000&style=flat-square)
 [![Dependency Status](https://img.shields.io/david/Finanzchef24-GmbH/check-david.svg?style=flat-square)](https://david-dm.org/Finanzchef24-GmbH/check-david)
 [![devDependency Status](https://img.shields.io/david/dev/Finanzchef24-GmbH/check-david.svg?style=flat-square)](https://david-dm.org/Finanzchef24-GmbH/check-david)
 ![node](https://img.shields.io/node/v/jira-todo.svg?style=flat-square)
@@ -11,31 +12,24 @@ A simple command line tool that checks whether your dependencies are up to date 
 
 ### Use Case
 
-This module attempts to solve a very specific problem and thus has the following constraints:
+This module attempts to solve a very specific problem and thus has the following semantics:
 
- - all dependencies must be pinned (or they will cause an error)
- - if you're one or more patch versions behind, you're good
- - if you're one or more minor versions behind, a warning will be generated
- - if you're one or more major versions behind, an error will be generated
+ - if you're at least one patch versions behind, an informational message will be generated
+ - if you're at least one minor versions behind, a warning will be generated
+ - if you're at least one major versions behind, an error will be generated
 
-Currently, there isn't anything you can configure (except for [ignoring packages](https://github.com/alanshaw/david#ignore-dependencies)). If you have a specific feature request, feel free to [create an issue](https://github.com/Finanzchef24-GmbH/check-david/issues/new).
+If you set the `--force-pinned` (and/or `--force-dev-pinned`) flag, unpinned dependencies will cause an error. If needed, you can completely [ignoring packages](https://github.com/alanshaw/david#ignore-dependencies). If you have a specific feature request, feel free to [create an issue](https://github.com/Finanzchef24-GmbH/check-david/issues/new).
 
 ### Usage
 ```bash
 $ npm i -g check-david
 $ check-david /absolute/path/to/package.json > check-david.xml
+
+# or execute the script from your module directory:
+$ cd projects/awesome-stuff
+$ check-david > check-david.xml  # uses the package.json in the current directory
 ```
 
-check-david will terminate with an exit code of 1 if it found any errors (and with an exit code of 2 in case of "real" errors). So if you want to integrate the report in your build script you may want to override the exit code, e.g. via a script in your `package.json`:
-```js
-{
-    // ...
-    "scripts": {
-        "check-david": "check-david `pwd`/package.json > reports/check-david.xml || true"
-    }
-}
-```
-and then simply run
-```bash
-$ npm run check-david
-```
+Unless an internal error occurred, check-david will always terminate with an exit code of zero. Use the mechanisms provided by your build system to fail if needed.
+
+You can ignore patch and minor version updates by using the `--level minor` or `--level major` command line option, respectively. Not that this does not affect the severity of the generated messages.

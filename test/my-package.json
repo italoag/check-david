@@ -1,0 +1,36 @@
+{
+    "name": "some-package",
+    "version": "0.4.1",
+    "description": "A package that does not really exist",
+    "main": "index.js",
+    "homepage": "https://github.com/wat/w00t",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/wat/w00t.git"
+    },
+    "bugs": {
+        "url": "https://github.com/wat/w00t/issues"
+    },
+    "keywords": [
+        "wat",
+        "w00t"
+    ],
+    "scripts": {
+        "test": "grunt test"
+    },
+    "author": "Raphael Pigulla <raphael.pigulla@finanzchef24.de>",
+    "license": "ISC",
+    "dependencies": {
+        "bluebird": "3.3.5",
+        "checkstyle-formatter": "1.0.0",
+        "david": "7.0.1",
+        "escape-string-regexp": "1.0.5",
+        "semver": "5.1.0"
+    },
+    "devDependencies": {
+        "chai": "3.5.0",
+        "eslint": "2.9.0",
+        "bluebird": "3.3.5",
+        "mocha": "2.4.5"
+    }
+}
