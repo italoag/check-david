@@ -18,7 +18,7 @@ This module has the following semantics:
  - if you're at least one minor version behind, a warning will be generated
  - if you're at least one major version behind, an error will be generated
 
-If you set the `--force-pinned` (and/or `--force-dev-pinned`) flag, unpinned dependencies will cause an error. If needed, you can completely [ignoring packages](https://github.com/alanshaw/david#ignore-dependencies). If you have a specific feature request, feel free to [create an issue](https://github.com/Finanzchef24-GmbH/check-david/issues/new).
+If you set the `--force-pinned` (and/or `--force-dev-pinned`) flag, unpinned dependencies will cause an error. If needed, you can completely [ignore packages](https://github.com/alanshaw/david#ignore-dependencies). If you have a specific feature request, feel free to [create an issue](https://github.com/Finanzchef24-GmbH/check-david/issues/new).
 
 ### Usage
 ```bash
