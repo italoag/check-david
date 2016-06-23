@@ -36,7 +36,7 @@
     "checkstyle-formatter": "1.0.0",
     "david": "7.0.2",
     "escape-string-regexp": "1.0.5",
-    "semver": "5.1.0",
+    "semver": "5.1.1",
     "yargs": "4.7.1"
   },
   "devDependencies": {
@@ -44,7 +44,7 @@
     "eslint": "2.13.1",
     "eslint-config-four66": "1.0.0",
     "mocha": "2.5.3",
-    "nsp": "1.4.0",
+    "nsp": "2.4.0",
     "proxyquire": "1.7.9",
     "sinon": "1.17.4",
     "sinon-chai": "2.8.0"
