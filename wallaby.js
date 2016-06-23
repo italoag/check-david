@@ -12,7 +12,5 @@ module.exports = {
     tests: [
         'test/**/*.spec.js'
     ],
-    env: {
-        type: 'node'
-    }
+    env: { type: 'node' }
 };

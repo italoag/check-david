@@ -12,10 +12,17 @@ module.exports = function findLine(lines, name, version) {
     const regex = new RegExp(`^\\s*"${escape(name)}":\\s*"${escape(version)}"`);
     const matches = lines.reduce(function (result, line, index) {
         if (regex.test(line)) {
-            result.push({ line: index + 1, column: line.indexOf(version) });
+            result.push({
+                line: index + 1,
+                column: line.indexOf(version)
+            });
         }
+
         return result;
-    }, [{ line: 0, column: 0 }]);
+    }, [{
+        line: 0,
+        column: 0
+    }]);
 
     return matches[matches.length === 2 ? 1 : 0];
 };

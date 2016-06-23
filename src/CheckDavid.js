@@ -8,6 +8,9 @@ const Promise = require('bluebird');
 const validate = require('./validate');
 const findLine = require('./find-line');
 
+/**
+ * Main CheckDavid class
+ */
 class CheckDavid {
     /**
      * @param {string} file
@@ -42,8 +45,14 @@ class CheckDavid {
     _getUpdatedDependencies() {
         return Promise
             .join(
-                Promise.fromCallback(cb => david.getUpdatedDependencies(this._pkg, { dev: false, stable: true }, cb)),
-                Promise.fromCallback(cb => david.getUpdatedDependencies(this._pkg, { dev: true, stable: true }, cb))
+                Promise.fromCallback(cb => david.getUpdatedDependencies(this._pkg, {
+                    dev: false,
+                    stable: true
+                }, cb)),
+                Promise.fromCallback(cb => david.getUpdatedDependencies(this._pkg, {
+                    dev: true,
+                    stable: true
+                }, cb))
             );
     }
 
@@ -74,6 +83,7 @@ class CheckDavid {
     _check(deps, mustBePinned) {
         return Object.keys(deps).reduce(function (result, name) {
             const message = this._checkDependency(name, deps[name].stable, deps[name].required, mustBePinned);
+
             return message ? result.concat(message) : result;
         }.bind(this), []);
     }
@@ -83,7 +93,11 @@ class CheckDavid {
      * @return {Promise.<Array.<Object>>}
      */
     run(options) {
-        const opts = Object.assign({}, { pin: false, pinDev: false }, options);
+        const opts = Object.assign({}, {
+            pin: false,
+            pinDev: false
+        }, options);
+
         return this._load()
             .then(this._getUpdatedDependencies)
             .spread((deps, devDeps) => [this._check(deps, opts.pin), this._check(devDeps, opts.pinDev)])

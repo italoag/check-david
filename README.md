@@ -23,13 +23,11 @@ If you set the `--force-pinned` (and/or `--force-dev-pinned`) flag, unpinned dep
 ### Usage
 ```bash
 $ npm i -g check-david
-$ check-david /absolute/path/to/package.json > check-david.xml
+$ check-david --file /absolute/path/to/package.json > check-david.xml
 
 # or execute the script from your module directory:
 $ cd projects/awesome-stuff
 $ check-david > check-david.xml  # uses the package.json in the current directory
 ```
-
-Unless an internal error occurred, check-david will always terminate with an exit code of zero. Use the mechanisms provided by your build system to fail if needed.
 
 You can ignore patch and minor version updates by using the `--level minor` or `--level major` command line option, respectively. Not that this does not affect the severity of the generated messages.

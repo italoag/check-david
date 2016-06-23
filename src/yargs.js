@@ -12,6 +12,11 @@ const OPTIONS = {
         default: path.join(process.cwd(), 'package.json'),
         defaultDescription: 'package.json in the current working directory'
     },
+    'warnOnly': {
+        type: 'boolean',
+        describe: 'Always terminate with exit code 0 (unless an error occurred)',
+        default: false
+    },
     'level': {
         type: 'string',
         requiresArg: true,
@@ -39,5 +44,5 @@ module.exports = yargs
     .version()
     .options(OPTIONS)
     .pkgConf('check-david', process.cwd())
-    .config('config', path => JSON.parse(fs.readFileSync(path)))
+    .config('config', file => JSON.parse(fs.readFileSync(file)))
     .strict();

@@ -3,7 +3,6 @@
 const semver = require('semver');
 
 /**
- * 
  * @param {string} name
  * @param {string} stable
  * @param {string} requiredRange
@@ -55,16 +54,24 @@ module.exports = function validate(name, stableStr, requiredStr, mustBePinned) {
         };
     }
 
+    /**
+     * @param {string} part
+     * @return {?{part: string, message: string}}
+     */
     function getMessage(part) {
-        const stable = semver[part](stableStr);
-        const required = semver[part](requiredStr);
+        const parts = {
+            stable: semver[part](stableStr),
+            required: semver[part](requiredStr)
+        };
 
-        if (stable > required) {
+        if (parts.stable > parts.required) {
             return {
                 part,
                 message: `New ${part} version available for module "${name}" (${stableStr})`
             };
         }
+
+        return null;
     }
 
     return getMessage('major') || getMessage('minor') || getMessage('patch') || null;

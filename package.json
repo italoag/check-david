@@ -1,13 +1,13 @@
 {
   "name": "check-david",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "No-nonsense dependency checks for your package.json",
   "main": "index.js",
   "bin": {
     "check-david": "./index.js"
   },
   "engines": {
-    "node": "4"
+    "node": ">=4"
   },
   "homepage": "https://github.com/Finanzchef24-GmbH/check-david",
   "repository": {
@@ -20,28 +20,32 @@
   "keywords": [
     "david",
     "dependencies",
-    "check"
+    "check",
+    "outdated"
   ],
   "scripts": {
-    "test": "npm run lint && npm run mocha",
+    "test": "npm run lint && npm run mocha && npm run nsp",
     "lint": "eslint .",
-    "mocha": "mocha test/\\*\\*/\\*.spec.js"
+    "mocha": "mocha test/\\*\\*/\\*.spec.js",
+    "nsp": "nsp check"
   },
   "author": "Raphael Pigulla <raphael.pigulla@finanzchef24.de>",
   "license": "ISC",
   "dependencies": {
-    "bluebird": "3.3.5",
+    "bluebird": "3.4.1",
     "checkstyle-formatter": "1.0.0",
-    "david": "7.0.1",
+    "david": "7.0.2",
     "escape-string-regexp": "1.0.5",
     "semver": "5.1.0",
-    "yargs": "4.7.0"
+    "yargs": "4.7.1"
   },
   "devDependencies": {
     "chai": "3.5.0",
-    "eslint": "2.9.0",
-    "mocha": "2.4.5",
-    "proxyquire": "1.7.7",
+    "eslint": "2.13.1",
+    "eslint-config-four66": "1.0.0",
+    "mocha": "2.5.3",
+    "nsp": "1.4.0",
+    "proxyquire": "1.7.9",
     "sinon": "1.17.4",
     "sinon-chai": "2.8.0"
   }

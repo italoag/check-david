@@ -39,7 +39,10 @@ describe('CheckDavid', function () {
     it('works', function () {
         fsStub.readFile.yields(null, myPackageJson);
         davidStub.getUpdatedDependencies.yields(null, {});
-        findLineStub.returns({ line: 0, column: 0 });
+        findLineStub.returns({
+            line: 0,
+            column: 0
+        });
         validateStub.returns(null);
 
         return checkDavid.run()
