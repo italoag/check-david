@@ -1,6 +1,6 @@
 # check-david
 [![npm](https://img.shields.io/npm/v/check-david.svg?style=flat-square)](https://www.npmjs.com/package/check-david)
-![Codeship](https://img.shields.io/codeship/f6eb23c0-f80b-0133-3724-2eb9f408a9c3.svg?maxAge=2592000&style=flat-square)
+[![Travis CI](https://img.shields.io/travis/Finanzchef24-GmbH/check-david/master.svg?maxAge=2592000&style=flat-square)](https://travis-ci.org/Finanzchef24-GmbH/check-david)
 [![Dependency Status](https://img.shields.io/david/Finanzchef24-GmbH/check-david.svg?style=flat-square)](https://david-dm.org/Finanzchef24-GmbH/check-david)
 [![devDependency Status](https://img.shields.io/david/dev/Finanzchef24-GmbH/check-david.svg?style=flat-square)](https://david-dm.org/Finanzchef24-GmbH/check-david)
 ![node](https://img.shields.io/node/v/jira-todo.svg?style=flat-square)

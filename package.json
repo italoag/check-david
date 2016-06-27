@@ -44,7 +44,7 @@
     "eslint": "2.13.1",
     "eslint-config-four66": "1.0.0",
     "mocha": "2.5.3",
-    "nsp": "2.4.0",
+    "nsp": "2.5.0",
     "proxyquire": "1.7.9",
     "sinon": "1.17.4",
     "sinon-chai": "2.8.0"
