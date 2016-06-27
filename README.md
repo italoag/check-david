@@ -8,7 +8,7 @@
 
 > No-nonsense dependency checks for your package.json
 
-A simple command line tool that checks whether your dependencies are up to date (using [David](https://github.com/alanshaw/david)) and outputs a checkstyle-compatible XML report.
+A simple command line tool that checks whether your dependencies are up to date (using [David](https://github.com/alanshaw/david)) and outputs a Checkstyle-compatible XML report.
 
 ### Use Case
 
